@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.biblioteca.biblioteca.controller.EmprestimoController"
+      spacing="15">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="Registrar Empréstimo"
+           style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Livro disponível:"/>
+        <ComboBox fx:id="livroCombo" prefWidth="300"/>
+    </HBox>
+
+    <Label text="Prazo de devolução: 7 dias a partir de hoje"
+           style="-fx-text-fill: #7f8c8d;"/>
+
+    <Button text="Registrar Empréstimo" onAction="#handleEmprestimo"/>
+    <Label fx:id="mensagemLabel"/>
+
+    <Separator/>
+    <Label text="Meus Empréstimos Ativos"
+           style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+    <TableView fx:id="emprestimosTable" prefHeight="220">
+        <columns>
+            <TableColumn fx:id="colLivro" text="Livro" prefWidth="180"/>
+            <TableColumn fx:id="colData" text="Data Empréstimo" prefWidth="140"/>
+            <TableColumn fx:id="colPrazo" text="Devolver até" prefWidth="140"/>
+            <TableColumn fx:id="colStatus" text="Status" prefWidth="100"/>
+        </columns>
+    </TableView>
+</VBox>

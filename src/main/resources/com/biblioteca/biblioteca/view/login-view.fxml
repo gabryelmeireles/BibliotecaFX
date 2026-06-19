@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.biblioteca.biblioteca.controller.LoginController">
+
+    <!-- PAINEL ESQUERDO — decorativo -->
+    <StackPane style="-fx-background-color: linear-gradient(to bottom, #1A2F6B, #2D4ED8);" HBox.hgrow="ALWAYS" />
+
+    <!-- PAINEL DIREITO — Logo + Formulário -->
+    <StackPane style="-fx-background-color: white;" HBox.hgrow="ALWAYS">
+
+        <VBox alignment="CENTER" maxWidth="380" spacing="0">
+
+            <!-- Logo -->
+            <ImageView fitWidth="300" preserveRatio="true" smooth="true">
+                <Image url="@../images/logo.png" />
+            </ImageView>
+
+            <Region prefHeight="28" />
+
+            <Label style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #3A4A6B;" text="E-mail" />
+            <Region prefHeight="6" />
+            <TextField fx:id="emailField" maxWidth="Infinity" promptText="seu@email.com" style="-fx-background-color: #F5F7FB; -fx-background-radius: 8; -fx-border-color: #D0D9EC; -fx-border-radius: 8; -fx-border-width: 1.2; -fx-pref-height: 46px; -fx-font-size: 13px; -fx-padding: 0 14;" />
+
+            <Region prefHeight="16" prefWidth="303.0" />
+
+            <Label style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #3A4A6B;" text="Senha" />
+            <Region prefHeight="6" />
+            <PasswordField fx:id="senhaField" maxWidth="Infinity" promptText="••••••••" style="-fx-background-color: #F5F7FB; -fx-background-radius: 8; -fx-border-color: #D0D9EC; -fx-border-radius: 8; -fx-border-width: 1.2; -fx-pref-height: 46px; -fx-font-size: 13px; -fx-padding: 0 14;" />
+
+            <Region prefHeight="26" />
+
+            <Button maxWidth="Infinity" onAction="#handleLogin" style="-fx-background-color: #2D4ED8; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 8; -fx-pref-height: 48px; -fx-cursor: hand;" text="ENTRAR" />
+
+            <Label fx:id="mensagemLabel" maxWidth="Infinity" style="-fx-text-fill: #D94040; -fx-font-size: 12px; -fx-padding: 10 0 0 0;" />
+
+        </VBox>
+
+    </StackPane>
+
+</HBox>

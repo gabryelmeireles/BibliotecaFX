@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.biblioteca.biblioteca.controller.UsuarioController"
+      spacing="15">
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="Cadastro de Usuários"
+           style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="Nome:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="nomeField" promptText="Nome completo"
+                   GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField fx:id="emailField" promptText="Email"
+                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <Label text="Senha:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <PasswordField fx:id="senhaField" promptText="Senha"
+                       GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    </GridPane>
+
+    <Button text="Cadastrar Usuário" onAction="#handleCadastrar"/>
+    <Label fx:id="mensagemLabel"/>
+
+    <Separator/>
+    <Label text="Usuários Cadastrados"
+           style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+    <TableView fx:id="usuariosTable" prefHeight="200">
+        <columns>
+            <TableColumn fx:id="colNome" text="Nome" prefWidth="200"/>
+            <TableColumn fx:id="colEmail" text="Email" prefWidth="250"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10">
+        <Button fx:id="btnExcluir" text="Excluir Usuário Selecionado"
+                onAction="#handleExcluir"
+                style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+    </HBox>
+</VBox>

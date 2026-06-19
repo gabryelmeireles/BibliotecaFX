@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="MainApp" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.biblioteca.biblioteca.MainApp" />
+    <option name="VM_PARAMETERS" value="--enable-native-access=javafx.graphics,ALL-UNNAMED --sun-misc-unsafe-memory-access=allow" />
+    <module name="biblioteca" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
