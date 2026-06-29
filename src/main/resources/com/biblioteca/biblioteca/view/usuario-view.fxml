@@ -8,11 +8,10 @@
       spacing="15">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
-    <Label text="Cadastro de Usuários"
-           style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+    <Label text="Cadastro de Usuários" styleClass="titulo-secao"/>
 
     <GridPane hgap="10" vgap="10">
-        <Label text="Nome:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <Label text="Nome:"  GridPane.columnIndex="0" GridPane.rowIndex="0"/>
         <TextField fx:id="nomeField" promptText="Nome completo"
                    GridPane.columnIndex="1" GridPane.rowIndex="0"/>
         <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
@@ -27,18 +26,17 @@
     <Label fx:id="mensagemLabel"/>
 
     <Separator/>
-    <Label text="Usuários Cadastrados"
-           style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+    <Label text="Usuários Cadastrados" styleClass="subtitulo-secao"/>
     <TableView fx:id="usuariosTable" prefHeight="200">
         <columns>
-            <TableColumn fx:id="colNome" text="Nome" prefWidth="200"/>
+            <TableColumn fx:id="colNome"  text="Nome"  prefWidth="200"/>
             <TableColumn fx:id="colEmail" text="Email" prefWidth="250"/>
         </columns>
     </TableView>
 
     <HBox spacing="10">
         <Button fx:id="btnExcluir" text="Excluir Usuário Selecionado"
-                onAction="#handleExcluir"
-                style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+                styleClass="btn-danger"
+                onAction="#handleExcluir"/>
     </HBox>
 </VBox>

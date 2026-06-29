@@ -8,8 +8,7 @@
       spacing="15">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
-    <Label text="Registrar Empréstimo"
-           style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+    <Label text="Registrar Empréstimo" styleClass="titulo-secao"/>
 
     <HBox spacing="10" alignment="CENTER_LEFT">
         <Label text="Livro disponível:"/>
@@ -23,14 +22,13 @@
     <Label fx:id="mensagemLabel"/>
 
     <Separator/>
-    <Label text="Meus Empréstimos Ativos"
-           style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+    <Label text="Meus Empréstimos Ativos" styleClass="subtitulo-secao"/>
     <TableView fx:id="emprestimosTable" prefHeight="220">
         <columns>
-            <TableColumn fx:id="colLivro" text="Livro" prefWidth="180"/>
-            <TableColumn fx:id="colData" text="Data Empréstimo" prefWidth="140"/>
-            <TableColumn fx:id="colPrazo" text="Devolver até" prefWidth="140"/>
-            <TableColumn fx:id="colStatus" text="Status" prefWidth="100"/>
+            <TableColumn fx:id="colLivro"  text="Livro"           prefWidth="180"/>
+            <TableColumn fx:id="colData"   text="Data Empréstimo" prefWidth="140"/>
+            <TableColumn fx:id="colPrazo"  text="Devolver até"    prefWidth="140"/>
+            <TableColumn fx:id="colStatus" text="Status"          prefWidth="100"/>
         </columns>
     </TableView>
 </VBox>

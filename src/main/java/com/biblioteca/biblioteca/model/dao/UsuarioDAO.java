@@ -6,11 +6,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-// DAO responsável pelas operações de banco de dados relacionadas a usuários
+// Responsável por toda comunicação com a tabela "usuario" no banco de dados
 public class UsuarioDAO {
 
-    // Busca um usuário pelo e-mail e senha para autenticação no login.
-    // Retorna null se não encontrar nenhum usuário com essas credenciais.
+    // Busca o usuário pelo e-mail e senha para autenticação no login
     public Usuario buscarPorEmailESenha(String email, String senha) throws SQLException {
         String sql = "SELECT * FROM usuario WHERE email = ? AND senha = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -18,7 +17,7 @@ public class UsuarioDAO {
             ps.setString(1, email);
             ps.setString(2, senha);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) { // se encontrou algum registro com esse e-mail e senha
+            if (rs.next()) {
                 Usuario u = new Usuario();
                 u.setId(rs.getInt("id"));
                 u.setNome(rs.getString("nome"));
@@ -27,10 +26,10 @@ public class UsuarioDAO {
                 return u;
             }
         }
-        return null; // retorna null quando as credenciais não correspondem a nenhum usuário
+        return null; // retorna null se não encontrar; o BO trata esse caso
     }
 
-    // Insere um novo usuário no banco de dados
+    // Insere um novo usuário no banco
     public void salvar(Usuario usuario) throws SQLException {
         String sql = "INSERT INTO usuario (nome, email, senha) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -42,8 +41,7 @@ public class UsuarioDAO {
         }
     }
 
-    // Retorna todos os usuários cadastrados.
-    // A senha não é carregada por questão de segurança: não precisamos dela na listagem.
+    // Retorna todos os usuários cadastrados (sem a senha, por segurança)
     public List<Usuario> listarTodos() throws SQLException {
         List<Usuario> lista = new ArrayList<>();
         String sql = "SELECT * FROM usuario";
@@ -61,8 +59,7 @@ public class UsuarioDAO {
         return lista;
     }
 
-    // Verifica se o usuário tem algum empréstimo ainda não devolvido.
-    // Usado antes de excluir: não podemos remover usuário com livro na mão.
+    // Verifica se o usuário ainda tem empréstimos em aberto antes de permitir exclusão
     public boolean possuiEmprestimosAtivos(int idUsuario) throws SQLException {
         String sql = "SELECT COUNT(*) FROM emprestimo WHERE id_usuario = ? AND devolvido = false";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -74,30 +71,27 @@ public class UsuarioDAO {
         return false;
     }
 
-    // Exclui o usuário e seus registros de empréstimo usando transação,
-    // garantindo que as duas operações aconteçam juntas ou nenhuma aconteça.
+    // Usa transação para deletar os empréstimos do usuário antes de deletar o próprio usuário
     public void excluir(int idUsuario) throws SQLException {
         try (Connection conn = DatabaseConnection.getConnection()) {
-            conn.setAutoCommit(false); // inicia a transação
+            conn.setAutoCommit(false);
             try {
-                // Primeiro apaga os empréstimos do usuário (integridade referencial)
                 try (PreparedStatement ps1 = conn.prepareStatement(
                         "DELETE FROM emprestimo WHERE id_usuario = ?")) {
                     ps1.setInt(1, idUsuario);
                     ps1.executeUpdate();
                 }
-                // Depois apaga o próprio usuário
                 try (PreparedStatement ps2 = conn.prepareStatement(
                         "DELETE FROM usuario WHERE id = ?")) {
                     ps2.setInt(1, idUsuario);
                     ps2.executeUpdate();
                 }
-                conn.commit(); // confirma as duas operações
+                conn.commit();
             } catch (SQLException e) {
-                conn.rollback(); // desfaz tudo se algo der errado
+                conn.rollback(); // se qualquer delete falhar, desfaz tudo
                 throw e;
             } finally {
-                conn.setAutoCommit(true); // volta ao modo padrão
+                conn.setAutoCommit(true);
             }
         }
     }

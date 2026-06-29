@@ -1,25 +1,22 @@
 package com.biblioteca.biblioteca.model.entity;
 
-// Representa um usuário do sistema (tanto admin quanto usuário comum).
-// A distinção entre admin e usuário comum é feita pelo e-mail:
-// "admin@email.com" é tratado como administrador nos Controllers.
+// Representa um usuário do sistema (pode ser comum ou administrador)
 public class Usuario {
     private int id;
     private String nome;
     private String email;
     private String senha;
 
-    // Construtor vazio: usado pelo DAO quando monta o objeto com dados do banco
+    // Construtor vazio usado ao montar o objeto a partir do banco
     public Usuario() {}
 
-    // Construtor com dados: usado no cadastro de um usuário novo
+    // Construtor usado ao cadastrar um novo usuário
     public Usuario(String nome, String email, String senha) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
     }
 
-    // Getters e Setters para acessar os atributos privados (encapsulamento)
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public String getNome() { return nome; }
@@ -29,6 +26,6 @@ public class Usuario {
     public String getSenha() { return senha; }
     public void setSenha(String senha) { this.senha = senha; }
 
-    // Retorna true se este usuário é o administrador do sistema
+    // Identifica o admin pelo e-mail fixo — não há campo "perfil" no banco
     public boolean isAdmin() { return "admin@email.com".equals(email); }
 }

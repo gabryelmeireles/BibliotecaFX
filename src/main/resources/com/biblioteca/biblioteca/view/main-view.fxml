@@ -3,32 +3,37 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import java.net.URL?>
 
 <BorderPane prefHeight="500" prefWidth="700" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="com.biblioteca.biblioteca.controller.MainController">
 
+    <stylesheets>
+        <URL value="@style.css"/>
+    </stylesheets>
+
     <top>
-        <VBox style="-fx-background-color: #2c3e50; -fx-padding: 15;">
+        <VBox styleClass="topbar">
             <Label prefHeight="0.0" prefWidth="203.0" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;" text="BibliotecaFX">
-            <font>
-               <Font size="18.0" />
-            </font></Label>
+                <font><Font size="18.0"/></font>
+            </Label>
             <Label fx:id="usuarioLogadoLabel" style="-fx-text-fill: #bdc3c7;" />
         </VBox>
     </top>
 
     <left>
-        <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #ecf0f1;">
-            <Button maxWidth="Infinity" onAction="#irParaEmprestimos" text="Empréstimos" />
-            <Button maxWidth="Infinity" onAction="#irParaDevolucoes" text="Devoluções" />
-            <Button fx:id="btnLivros" maxWidth="Infinity" onAction="#irParaLivros" text="Livros" />
-            <Button fx:id="btnUsuarios" maxWidth="Infinity" onAction="#irParaUsuarios" text="Usuários" />
-            <Button maxWidth="Infinity" onAction="#handleSair" text="Sair" />
+        <VBox styleClass="sidebar">
+            <Button maxWidth="Infinity" styleClass="menu-btn" onAction="#irParaEmprestimos" text="Empréstimos" />
+            <Button maxWidth="Infinity" styleClass="menu-btn" onAction="#irParaDevolucoes" text="Devoluções" />
+            <Button fx:id="btnLivros"   maxWidth="Infinity" styleClass="menu-btn" onAction="#irParaLivros"    text="Livros" />
+            <Button fx:id="btnUsuarios" maxWidth="Infinity" styleClass="menu-btn" onAction="#irParaUsuarios"  text="Usuários" />
+            <Button fx:id="btnLogs"     maxWidth="Infinity" styleClass="menu-btn" onAction="#irParaLogs"      text="Logs" />
+            <Button maxWidth="Infinity" styleClass="menu-btn" onAction="#handleSair" text="Sair" />
         </VBox>
     </left>
 
     <center>
-        <StackPane fx:id="conteudoPane" style="-fx-padding: 20;">
-            <Label style="-fx-font-size: 14px;" text="Bem-vindo! Selecione uma opção no menu." />
+        <StackPane fx:id="conteudoPane" style="-fx-padding: 20; -fx-background-color: white;">
+            <Label style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d;" text="Bem-vindo! Selecione uma opção no menu." />
         </StackPane>
     </center>
 

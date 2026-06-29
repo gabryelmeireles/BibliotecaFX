@@ -8,15 +8,14 @@
       spacing="15">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 
-    <Label text="Registrar Devolução"
-           style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+    <Label text="Registrar Devolução" styleClass="titulo-secao"/>
 
     <Label text="Selecione o empréstimo para devolver:"/>
     <TableView fx:id="emprestimosTable" prefHeight="250">
         <columns>
-            <TableColumn fx:id="colLivro" text="Livro" prefWidth="200"/>
-            <TableColumn fx:id="colUsuario" text="Usuário" prefWidth="150"/>
-            <TableColumn fx:id="colData" text="Data Empréstimo" prefWidth="150"/>
+            <TableColumn fx:id="colLivro"   text="Livro"           prefWidth="200"/>
+            <TableColumn fx:id="colUsuario" text="Usuário"         prefWidth="150"/>
+            <TableColumn fx:id="colData"    text="Data Empréstimo" prefWidth="150"/>
         </columns>
     </TableView>
 

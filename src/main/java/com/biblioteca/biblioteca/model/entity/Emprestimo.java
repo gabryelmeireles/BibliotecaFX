@@ -2,31 +2,28 @@ package com.biblioteca.biblioteca.model.entity;
 
 import java.time.LocalDateTime;
 
-// Representa um empréstimo: a ligação entre um usuário e um livro durante um período.
-// Quando um livro é emprestado, cria-se um Emprestimo. Quando devolvido, marca-se devolvido = true.
+// Representa um registro de empréstimo, ligando um usuário a um livro
 public class Emprestimo {
     private int id;
-    private Usuario usuario;               // quem pegou o livro emprestado
-    private Livro livro;                   // qual livro foi emprestado
+    private Usuario usuario;
+    private Livro livro;
     private LocalDateTime dataEmprestimo;
     private LocalDateTime dataPrevistaDevolucao;
-    private LocalDateTime dataDevolucao;   // fica null até o livro ser devolvido
+    private LocalDateTime dataDevolucao;
     private boolean devolvido;
 
-    // Construtor vazio: usado pelo DAO ao montar objetos com dados vindos do banco
+    // Construtor vazio usado ao montar o objeto a partir do banco
     public Emprestimo() {}
 
-    // Construtor principal: cria o empréstimo definindo as datas automaticamente.
-    // O prazo de devolução é definido como 7 dias a partir de hoje.
+    // Construtor usado ao criar um novo empréstimo — já define o prazo de 7 dias automaticamente
     public Emprestimo(Usuario usuario, Livro livro) {
         this.usuario = usuario;
         this.livro = livro;
         this.dataEmprestimo = LocalDateTime.now();
-        this.dataPrevistaDevolucao = LocalDateTime.now().plusDays(7); // prazo: 7 dias
+        this.dataPrevistaDevolucao = LocalDateTime.now().plusDays(7);
         this.devolvido = false;
     }
 
-    // Getters e Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public Usuario getUsuario() { return usuario; }
@@ -42,9 +39,7 @@ public class Emprestimo {
     public boolean isDevolvido() { return devolvido; }
     public void setDevolvido(boolean devolvido) { this.devolvido = devolvido; }
 
-    // Verifica se o empréstimo está atrasado:
-    // só está atrasado se NÃO foi devolvido E a data prevista já passou.
-    // Usado na tela de empréstimos para pintar a linha de vermelho.
+    // Verifica em tempo real se o prazo já passou e o livro ainda não foi devolvido
     public boolean isAtrasado() {
         return !devolvido && LocalDateTime.now().isAfter(dataPrevistaDevolucao);
     }

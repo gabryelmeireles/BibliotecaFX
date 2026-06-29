@@ -7,13 +7,15 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-// Controlador da tela de gerenciamento de usuários.
-// Permite cadastrar, listar e (somente admin) excluir usuários.
 public class UsuarioController {
+
+    // Campos do formulário de cadastro
     @FXML private TextField nomeField;
     @FXML private TextField emailField;
     @FXML private PasswordField senhaField;
     @FXML private Label mensagemLabel;
+
+    // Tabela com todos os usuários cadastrados
     @FXML private TableView<Usuario> usuariosTable;
     @FXML private TableColumn<Usuario, String> colNome;
     @FXML private TableColumn<Usuario, String> colEmail;
@@ -22,17 +24,19 @@ public class UsuarioController {
     private UsuarioBO bo = new UsuarioBO();
     private Usuario usuarioLogado;
 
-    // Recebe o usuário logado; só admin pode excluir outros usuários
+    // Recebe o usuário da sessão e já carrega a lista
     public void setUsuarioLogado(Usuario u) {
         this.usuarioLogado = u;
-        // Só admin pode excluir
+        // Botão de excluir só aparece para o administrador
         btnExcluir.setVisible(u.getEmail().equals("admin@email.com"));
         carregarDados();
     }
 
-    // Preenche a tabela com todos os usuários cadastrados
     private void carregarDados() {
         try {
+            usuariosTable.setMaxWidth(colNome.getPrefWidth() + colEmail.getPrefWidth() + 18);
+
+            // Cada coluna exibe um atributo do objeto Usuario
             colNome.setCellValueFactory(d ->
                     new javafx.beans.property.SimpleStringProperty(
                             d.getValue().getNome()));
@@ -47,7 +51,7 @@ public class UsuarioController {
         }
     }
 
-    // Chamado quando o usuário clica em "Cadastrar"
+    // Acionado pelo botão "Cadastrar"
     @FXML
     private void handleCadastrar() {
         try {
@@ -66,13 +70,13 @@ public class UsuarioController {
         }
     }
 
-    // Chamado quando o admin clica em "Excluir".
-    // Protegido contra a exclusão do próprio admin (garantia de que sempre haverá um admin).
+    // Acionado pelo botão "Excluir" — só visível para o admin
     @FXML
     private void handleExcluir() {
         try {
             Usuario selecionado = usuariosTable.getSelectionModel().getSelectedItem();
             if (selecionado == null) throw new Exception("Selecione um usuário.");
+            // Proteção para não deixar o admin ser removido
             if (selecionado.getEmail().equals("admin@email.com"))
                 throw new Exception("O usuário admin não pode ser excluído.");
             bo.excluir(selecionado.getId());

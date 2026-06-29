@@ -8,18 +8,15 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-// Responsável por gravar registros das ações e erros do sistema em arquivos de texto.
-// Requisito do edital: "rastreabilidade das ações" e "log de exceções".
 public class LogUtil {
 
     private static final String PASTA_LOGS   = "logs";
-    private static final String LOG_ACOES    = PASTA_LOGS + "/uso.log";       // ações normais
-    private static final String LOG_EXCECOES = PASTA_LOGS + "/excecoes.log";  // erros
+    public  static final String LOG_ACOES    = PASTA_LOGS + "/uso.log";      // ações dos usuários
+    public  static final String LOG_EXCECOES = PASTA_LOGS + "/excecoes.log"; // erros capturados
     private static final DateTimeFormatter fmt =
             DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
-    // Cria a pasta "logs/" na primeira vez que a classe for carregada.
-    // Sem isso, a gravação dos arquivos falharia se a pasta não existisse.
+    // Cria a pasta de logs ao carregar a classe, caso ainda não exista
     static {
         try {
             Files.createDirectories(Paths.get(PASTA_LOGS));
@@ -28,8 +25,7 @@ public class LogUtil {
         }
     }
 
-    // Registra uma ação bem-sucedida (ex: login, cadastro de livro, empréstimo).
-    // Formato gerado: [17/06/2026 14:30:22] ACAO='LOGIN_REALIZADO' USUARIO='admin@email.com'
+    // Grava uma ação do usuário no uso.log com data, hora e e-mail
     public static void registrarAcao(String acao, String emailUsuario) {
         StringBuilder sb = new StringBuilder();
         sb.append("[").append(LocalDateTime.now().format(fmt)).append("] ");
@@ -39,8 +35,7 @@ public class LogUtil {
         escreverArquivo(LOG_ACOES, sb.toString());
     }
 
-    // Registra um erro que aconteceu durante uma operação.
-    // Formato: [data] ACAO='...' USUARIO='...' ERRO='mensagem do erro'
+    // Grava uma exceção no excecoes.log com a mensagem do erro
     public static void registrarExcecao(String acao, String emailUsuario, Exception e) {
         StringBuilder sb = new StringBuilder();
         sb.append("[").append(LocalDateTime.now().format(fmt)).append("] ");
@@ -51,8 +46,7 @@ public class LogUtil {
         escreverArquivo(LOG_EXCECOES, sb.toString());
     }
 
-    // Abre o arquivo em modo "append" (true = não apaga o conteúdo anterior)
-    // e escreve a linha de log ao final do arquivo.
+    // Abre o arquivo em modo append e escreve a linha de log
     private static void escreverArquivo(String arquivo, String linha) {
         try (FileWriter fw = new FileWriter(arquivo, true);
              PrintWriter pw = new PrintWriter(fw)) {

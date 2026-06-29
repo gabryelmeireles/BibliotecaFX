@@ -6,20 +6,16 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-// DAO = Data Access Object. Responsável exclusivamente pelas operações de banco de dados
-// relacionadas a livros. Não contém regras de negócio — isso fica no LivroBO.
+// Responsável por toda comunicação com a tabela "livro" no banco de dados
 public class LivroDAO {
 
-    // Retorna todos os livros cadastrados no banco, sem nenhum filtro
+    // Retorna todos os livros cadastrados, independente de disponibilidade
     public List<Livro> listarTodos() throws SQLException {
         List<Livro> livros = new ArrayList<>();
         String sql = "SELECT * FROM livro";
-        // try-with-resources: fecha automaticamente Connection, PreparedStatement e ResultSet
-        // ao sair do bloco, mesmo que ocorra uma exceção. Evita vazamento de recursos.
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            // rs.next() avança linha por linha no resultado retornado pelo banco
             while (rs.next()) {
                 Livro l = new Livro();
                 l.setId(rs.getInt("id"));
@@ -33,7 +29,7 @@ public class LivroDAO {
         return livros;
     }
 
-    // Busca diretamente no banco apenas os livros com disponivel = true
+    // Retorna apenas os livros com disponivel = true (consulta direta no banco)
     public List<Livro> listarDisponiveis() throws SQLException {
         List<Livro> livros = new ArrayList<>();
         String sql = "SELECT * FROM livro WHERE disponivel = true";
@@ -53,21 +49,19 @@ public class LivroDAO {
         return livros;
     }
 
-    // Insere um novo livro no banco.
-    // PreparedStatement com "?" evita SQL Injection: os valores são tratados como dados
-    // puros, nunca como parte do comando SQL.
+    // Insere um novo livro — disponivel começa como true por padrão no banco
     public void salvar(Livro livro) throws SQLException {
         String sql = "INSERT INTO livro (titulo, autor, isbn) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, livro.getTitulo()); // substitui o 1º "?"
-            ps.setString(2, livro.getAutor());  // substitui o 2º "?"
-            ps.setString(3, livro.getIsbn());   // substitui o 3º "?"
-            ps.executeUpdate();                  // executa o INSERT
+            ps.setString(1, livro.getTitulo());
+            ps.setString(2, livro.getAutor());
+            ps.setString(3, livro.getIsbn());
+            ps.executeUpdate();
         }
     }
 
-    // Atualiza apenas o campo "disponivel" do livro especificado pelo id
+    // Atualiza o campo disponivel ao realizar ou devolver um empréstimo
     public void atualizarDisponibilidade(int id, boolean disponivel) throws SQLException {
         String sql = "UPDATE livro SET disponivel = ? WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -78,44 +72,39 @@ public class LivroDAO {
         }
     }
 
-    // Verifica se existe pelo menos um empréstimo ativo para este livro.
-    // Usado antes de excluir: não podemos remover um livro que está emprestado.
+    // Verifica se o livro ainda está emprestado antes de permitir exclusão
     public boolean possuiEmprestimoAtivo(int idLivro) throws SQLException {
         String sql = "SELECT COUNT(*) FROM emprestimo WHERE id_livro = ? AND devolvido = false";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idLivro);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) return rs.getInt(1) > 0; // COUNT(*) > 0 significa que tem empréstimo ativo
+            if (rs.next()) return rs.getInt(1) > 0;
         }
         return false;
     }
 
-    // Exclui o livro e todos os seus registros de empréstimo usando TRANSAÇÃO.
-    // Transação garante que as duas operações aconteçam juntas ou nenhuma aconteça:
-    // se deletar os empréstimos mas falhar no livro, o rollback() desfaz tudo.
+    // Usa transação para garantir que os empréstimos e o livro sejam deletados juntos ou nenhum seja
     public void excluir(int idLivro) throws SQLException {
         try (Connection conn = DatabaseConnection.getConnection()) {
-            conn.setAutoCommit(false); // inicia a transação — desliga o commit automático
+            conn.setAutoCommit(false);
             try {
-                // Primeiro apaga os empréstimos do livro (integridade referencial do banco)
                 try (PreparedStatement ps1 = conn.prepareStatement(
                         "DELETE FROM emprestimo WHERE id_livro = ?")) {
                     ps1.setInt(1, idLivro);
                     ps1.executeUpdate();
                 }
-                // Depois apaga o próprio livro
                 try (PreparedStatement ps2 = conn.prepareStatement(
                         "DELETE FROM livro WHERE id = ?")) {
                     ps2.setInt(1, idLivro);
                     ps2.executeUpdate();
                 }
-                conn.commit(); // confirma as duas operações no banco
+                conn.commit();
             } catch (SQLException e) {
-                conn.rollback(); // desfaz tudo se algo der errado
+                conn.rollback(); // se qualquer delete falhar, desfaz tudo
                 throw e;
             } finally {
-                conn.setAutoCommit(true); // volta ao modo padrão independente do resultado
+                conn.setAutoCommit(true);
             }
         }
     }

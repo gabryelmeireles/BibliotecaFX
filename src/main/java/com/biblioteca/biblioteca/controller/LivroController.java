@@ -8,13 +8,15 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-// Controlador da tela de gerenciamento de livros.
-// Permite cadastrar, listar e (somente admin) excluir livros.
 public class LivroController {
+
+    // Campos de entrada do formulário de cadastro
     @FXML private TextField tituloField;
     @FXML private TextField autorField;
     @FXML private TextField isbnField;
     @FXML private Label mensagemLabel;
+
+    // Tabela que lista todos os livros cadastrados
     @FXML private TableView<Livro> livrosTable;
     @FXML private TableColumn<Livro, String> colTitulo;
     @FXML private TableColumn<Livro, String> colAutor;
@@ -25,19 +27,19 @@ public class LivroController {
     private LivroBO bo = new LivroBO();
     private Usuario usuarioLogado;
 
-    // Recebe o usuário logado vindo do MainController.
-    // Esconde o botão "Excluir" para quem não for admin.
+    // Recebe o usuário logado e já carrega os dados da tela
     public void setUsuarioLogado(Usuario u) {
         this.usuarioLogado = u;
+        // Botão de excluir só aparece para o administrador
         btnExcluir.setVisible(u.getEmail().equals("admin@email.com"));
         carregarDados();
     }
 
-    // Busca os livros no banco e preenche a tabela na tela
     private void carregarDados() {
         try {
-            // setCellValueFactory define de onde cada coluna tira o valor para exibir.
-            // d.getValue() retorna o objeto Livro daquela linha da tabela.
+            livrosTable.setMaxWidth(colTitulo.getPrefWidth() + colAutor.getPrefWidth() + colIsbn.getPrefWidth() + colDisponivel.getPrefWidth() + 18);
+
+            // Cada coluna lê o atributo correspondente do objeto Livro
             colTitulo.setCellValueFactory(d ->
                     new javafx.beans.property.SimpleStringProperty(
                             d.getValue().getTitulo()));
@@ -51,7 +53,6 @@ public class LivroController {
                     new javafx.beans.property.SimpleStringProperty(
                             d.getValue().isDisponivel() ? "Disponível" : "Indisponível"));
 
-            // FXCollections.observableArrayList() converte a List comum para o formato do JavaFX
             livrosTable.setItems(
                     FXCollections.observableArrayList(bo.listarTodos()));
         } catch (Exception e) {
@@ -60,7 +61,7 @@ public class LivroController {
         }
     }
 
-    // Chamado quando o usuário clica no botão "Cadastrar"
+    // Acionado pelo botão "Cadastrar" — valida e salva o livro via BO
     @FXML
     private void handleCadastrar() {
         try {
@@ -69,17 +70,17 @@ public class LivroController {
                     usuarioLogado.getEmail());
             mensagemLabel.setStyle("-fx-text-fill: green;");
             mensagemLabel.setText("Livro cadastrado com sucesso!");
-            tituloField.clear(); autorField.clear(); isbnField.clear(); // limpa os campos
-            carregarDados(); // atualiza a tabela com o novo livro
+            tituloField.clear(); autorField.clear(); isbnField.clear();
+            carregarDados();
         } catch (Exception e) {
             LogUtil.registrarExcecao("Cadastrar livro",
                     usuarioLogado != null ? usuarioLogado.getEmail() : null, e);
             mensagemLabel.setStyle("-fx-text-fill: red;");
-            mensagemLabel.setText(e.getMessage()); // exibe a mensagem de validação
+            mensagemLabel.setText(e.getMessage());
         }
     }
 
-    // Chamado quando o admin clica em "Excluir" — botão invisível para usuários comuns
+    // Acionado pelo botão "Excluir" — só aparece para o admin
     @FXML
     private void handleExcluir() {
         try {
