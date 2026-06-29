@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" style="-fx-padding: 10;" xmlns:fx="http://javafx.com/fxml/1"
+      xmlns="http://javafx.com/javafx/17.0.12"
+      fx:controller="com.biblioteca.biblioteca.controller.LogController">
+
+    <!-- Cabeçalho com título e botão de atualizar -->
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Label styleClass="titulo-secao" text="Logs do Sistema" />
+        <Button onAction="#handleAtualizar" text="Atualizar" />
+    </HBox>
+
+    <!-- Tabela principal de logs -->
+    <TableView fx:id="tabelaLogs" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colDataHora" prefWidth="145" text="Data/Hora" />
+            <TableColumn fx:id="colTipo"     prefWidth="65"  text="Tipo" />
+            <TableColumn fx:id="colAcao"     prefWidth="220" text="Ação" />
+            <TableColumn fx:id="colUsuario"  prefWidth="185" text="Usuário" />
+            <TableColumn fx:id="colDetalhe"  prefWidth="170" text="Detalhe" />
+        </columns>
+        <placeholder>
+            <Label text="Nenhum registro de log encontrado." />
+        </placeholder>
+    </TableView>
+
+    <!-- Rodapé com contagem total -->
+    <Label fx:id="labelTotal" style="-fx-text-fill: #666666;" />
+
+</VBox>
